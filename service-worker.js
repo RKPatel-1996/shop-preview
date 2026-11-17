@@ -13,8 +13,8 @@
 const APP_ROOT = '/shop-preview/';
 const CACHE_PREFIX = 'amul-shop-preview-';
 
-const CACHE_NAME = "amul-shop-preview-v0.2-5b58dbac3c04489b46ca";
-const PRECACHE_PATHS = ["/shop-preview/","/shop-preview/index.html","/shop-preview/assets/index-5nQhMkUe.css","/shop-preview/assets/index-CZtv7Mb7.js","/shop-preview/register-pwa.js","/shop-preview/preview-fonts.css","/shop-preview/manifest.webmanifest","/shop-preview/icons/icon-192.png","/shop-preview/icons/icon-512.png","/shop-preview/fonts/plus-jakarta-sans-variable.woff2","/shop-preview/fonts/noto-sans-devanagari-variable.woff2","/shop-preview/fonts/noto-sans-gujarati-variable.woff2","/shop-preview/fonts/FONT_LICENSES.txt"];
+const CACHE_NAME = "amul-shop-preview-v0.3-e4bf143043de292bb2f7";
+const PRECACHE_PATHS = ["/shop-preview/","/shop-preview/index.html","/shop-preview/assets/index-BfnwFMML.css","/shop-preview/assets/index-D9QP6SiI.js","/shop-preview/register-pwa.js","/shop-preview/preview-fonts.css","/shop-preview/manifest.webmanifest","/shop-preview/icons/icon-192.png","/shop-preview/icons/icon-512.png","/shop-preview/fonts/plus-jakarta-sans-variable.woff2","/shop-preview/fonts/noto-sans-devanagari-variable.woff2","/shop-preview/fonts/noto-sans-gujarati-variable.woff2","/shop-preview/fonts/FONT_LICENSES.txt"];
 
 function validateConfiguration() {
   if (
