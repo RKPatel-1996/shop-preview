@@ -12,9 +12,12 @@
 
 const APP_ROOT = '/shop-preview/';
 const CACHE_PREFIX = 'amul-shop-preview-';
+const UPDATE_PROTOCOL_VERSION = 1;
+const ACTIVATE_UPDATE_MESSAGE = 'AMUL_PREVIEW_ACTIVATE_UPDATE';
+const ACTIVATION_REJECTED_MESSAGE = 'AMUL_PREVIEW_ACTIVATION_REJECTED';
 
-const CACHE_NAME = "amul-shop-preview-v0.4-a75be454ecdfaa0ab5bf";
-const PRECACHE_PATHS = ["/shop-preview/","/shop-preview/index.html","/shop-preview/assets/index-Bm8SAYfU.css","/shop-preview/assets/index-BoHXzfTb.js","/shop-preview/register-pwa.js","/shop-preview/preview-fonts.css","/shop-preview/manifest.webmanifest","/shop-preview/icons/icon-192.png","/shop-preview/icons/icon-512.png","/shop-preview/fonts/plus-jakarta-sans-variable.woff2","/shop-preview/fonts/noto-sans-devanagari-variable.woff2","/shop-preview/fonts/noto-sans-gujarati-variable.woff2","/shop-preview/fonts/FONT_LICENSES.txt"];
+const CACHE_NAME = "amul-shop-preview-v0.5-cbb274bb2be34f41de5b";
+const PRECACHE_PATHS = ["/shop-preview/","/shop-preview/index.html","/shop-preview/assets/index-DWdqXS8n.js","/shop-preview/assets/index-uhEBXGmN.css","/shop-preview/register-pwa.js","/shop-preview/preview-fonts.css","/shop-preview/manifest.webmanifest","/shop-preview/icons/icon-192.png","/shop-preview/icons/icon-512.png","/shop-preview/fonts/plus-jakarta-sans-variable.woff2","/shop-preview/fonts/noto-sans-devanagari-variable.woff2","/shop-preview/fonts/noto-sans-gujarati-variable.woff2","/shop-preview/fonts/FONT_LICENSES.txt"];
 
 function validateConfiguration() {
   if (
@@ -97,8 +100,8 @@ self.addEventListener('install', event => {
   })());
 
   /*
-   * Intentionally no skipWaiting().
-   * An updated worker waits for existing clients to close.
+   * Intentionally no automatic activation. An updated worker waits until
+   * one verified in-scope client explicitly requests the update below.
    */
 });
 
@@ -136,6 +139,86 @@ self.addEventListener('activate', event => {
      * controlled without a second online navigation.
      */
     await self.clients.claim();
+  })());
+});
+
+self.addEventListener('message', event => {
+  const message = event.data;
+
+  if (
+    !message ||
+    typeof message !== 'object' ||
+    Object.keys(message).sort().join(',') !== 'protocolVersion,type' ||
+    message.type !== ACTIVATE_UPDATE_MESSAGE ||
+    message.protocolVersion !== UPDATE_PROTOCOL_VERSION
+  ) {
+    return;
+  }
+
+  const source = event.source;
+
+  if (
+    !source ||
+    typeof source.id !== 'string' ||
+    typeof source.url !== 'string' ||
+    typeof source.postMessage !== 'function'
+  ) {
+    return;
+  }
+
+  let sourceUrl;
+
+  try {
+    sourceUrl = new URL(source.url);
+  } catch {
+    return;
+  }
+
+  if (
+    sourceUrl.origin !== self.location.origin ||
+    !sourceUrl.pathname.startsWith(APP_ROOT)
+  ) {
+    return;
+  }
+
+  event.waitUntil((async () => {
+    try {
+      const windows = await self.clients.matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      });
+      const scopedWindows = windows.filter(client => {
+        try {
+          const url = new URL(client.url);
+          return (
+            url.origin === self.location.origin &&
+            url.pathname.startsWith(APP_ROOT)
+          );
+        } catch {
+          return false;
+        }
+      });
+
+      if (
+        scopedWindows.length !== 1 ||
+        scopedWindows[0].id !== source.id
+      ) {
+        source.postMessage({
+          type: ACTIVATION_REJECTED_MESSAGE,
+          protocolVersion: UPDATE_PROTOCOL_VERSION,
+          reason: 'MULTIPLE_CLIENTS'
+        });
+        return;
+      }
+
+      await self.skipWaiting();
+    } catch {
+      source.postMessage({
+        type: ACTIVATION_REJECTED_MESSAGE,
+        protocolVersion: UPDATE_PROTOCOL_VERSION,
+        reason: 'ACTIVATION_FAILED'
+      });
+    }
   })());
 });
 
