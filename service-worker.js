@@ -16,8 +16,8 @@ const UPDATE_PROTOCOL_VERSION = 1;
 const ACTIVATE_UPDATE_MESSAGE = 'AMUL_PREVIEW_ACTIVATE_UPDATE';
 const ACTIVATION_REJECTED_MESSAGE = 'AMUL_PREVIEW_ACTIVATION_REJECTED';
 
-const CACHE_NAME = "amul-shop-preview-v0.5-cbb274bb2be34f41de5b";
-const PRECACHE_PATHS = ["/shop-preview/","/shop-preview/index.html","/shop-preview/assets/index-DWdqXS8n.js","/shop-preview/assets/index-uhEBXGmN.css","/shop-preview/register-pwa.js","/shop-preview/preview-fonts.css","/shop-preview/manifest.webmanifest","/shop-preview/icons/icon-192.png","/shop-preview/icons/icon-512.png","/shop-preview/fonts/plus-jakarta-sans-variable.woff2","/shop-preview/fonts/noto-sans-devanagari-variable.woff2","/shop-preview/fonts/noto-sans-gujarati-variable.woff2","/shop-preview/fonts/FONT_LICENSES.txt"];
+const CACHE_NAME = "amul-shop-preview-v0.5-ef9d9e7b0933d1c4a939";
+const PRECACHE_PATHS = ["/shop-preview/","/shop-preview/index.html","/shop-preview/assets/index-CoxH9g1e.js","/shop-preview/assets/index-uhEBXGmN.css","/shop-preview/register-pwa.js","/shop-preview/preview-fonts.css","/shop-preview/manifest.webmanifest","/shop-preview/icons/icon-192.png","/shop-preview/icons/icon-512.png","/shop-preview/fonts/plus-jakarta-sans-variable.woff2","/shop-preview/fonts/noto-sans-devanagari-variable.woff2","/shop-preview/fonts/noto-sans-gujarati-variable.woff2","/shop-preview/fonts/FONT_LICENSES.txt"];
 
 function validateConfiguration() {
   if (
